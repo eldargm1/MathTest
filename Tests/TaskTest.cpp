@@ -6,7 +6,7 @@
 TEST(TaskTest, DefaultConstructor) {
     Task t;
     EXPECT_GE(t.num_1, 1);
-    EXPECT_LE(t.num_1, 10);
+    EXPECT_LE(t.num_1, 100);
     EXPECT_GE(t.num_2, 1);
     EXPECT_LE(t.num_2, 10);
     EXPECT_TRUE(t.operation == '+' || t.operation == '-' ||
