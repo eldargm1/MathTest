@@ -20,10 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib.h" />
+    <ClInclude Include="MathTest.h" />
     <ClInclude Include="Task.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Lib.cpp" />
+    <ClCompile Include="MathTest.cpp" />
     <ClCompile Include="Task.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
