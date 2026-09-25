@@ -3,8 +3,8 @@
 #include <ctime>
 #include <stdexcept>
 
-// Инициализация генератора случайных чисел (один раз)
 static bool seeded = false;
+
 static void ensureSeeded() {
     if (!seeded) {
         std::srand(static_cast<unsigned>(std::time(nullptr)));
@@ -12,40 +12,36 @@ static void ensureSeeded() {
     }
 }
 
-// --- Конструктор по умолчанию ---
 Task::Task() {
-    generate(1, 10, '\0');  // диапазон 1..10, любая операция
+    generate(1, 10, '\0');
 }
 
-// --- Конструктор с диапазоном и операцией ---
 Task::Task(int min, int max, char operation) {
     if (min > max) {
-        throw std::invalid_argument("min не может быть больше max");
+        throw std::invalid_argument("min cannot be greater than max");
     }
     generate(min, max, operation);
 }
 
-// --- Генерация примера ---
 void Task::generate(int min, int max, char op) {
     ensureSeeded();
 
-    // Если операция не задана — выбираем случайную из + - * /
     if (op == '\0') {
         const char ops[] = { '+', '-', '*', '/' };
         op = ops[std::rand() % 4];
     }
 
-    // Проверяем, что операция допустима
     if (op != '+' && op != '-' && op != '*' && op != '/') {
-        throw std::invalid_argument("Недопустимая операция");
+        throw std::invalid_argument("Invalid operation");
     }
 
     operation = op;
 
-    // Для деления — генерируем так, чтобы делилось нацело
     if (op == '/') {
         num_2 = min + std::rand() % (max - min + 1);
-        if (num_2 == 0) num_2 = 1;  // защита от деления на 0
+        if (num_2 == 0) {
+            num_2 = 1;
+        }
         int result = min + std::rand() % (max - min + 1);
         num_1 = num_2 * result;
     }
@@ -57,13 +53,12 @@ void Task::generate(int min, int max, char op) {
     answer = calculate();
 }
 
-// --- Вычисление ответа ---
 int Task::calculate() const {
     switch (operation) {
     case '+': return num_1 + num_2;
     case '-': return num_1 - num_2;
     case '*': return num_1 * num_2;
     case '/': return num_1 / num_2;
-    default:  throw std::runtime_error("Неизвестная операция");
+    default:  throw std::runtime_error("Unknown operation");
     }
 }

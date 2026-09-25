@@ -2,21 +2,23 @@
 #include "MathTest.h"
 
 int main() {
-    setlocale(LC_ALL, "Russian");
-
     std::cout << "=== MathTest ===\n";
-    std::cout << "Тренировка устного счёта.\n\n";
+    std::cout << "Mental math training.\n\n";
 
     int count;
-    std::cout << "Сколько примеров? ";
-    std::cin >> count;
+    std::cout << "How many questions? ";
+    if (!(std::cin >> count)) {
+        std::cerr << "Error: enter a number\n";
+        return 1;
+    }
 
     try {
         MathTest test(count, 1, 20);
         test.run();
     }
     catch (const std::exception& e) {
-        std::cout << "Ошибка: " << e.what() << std::endl;
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
     }
 
     return 0;

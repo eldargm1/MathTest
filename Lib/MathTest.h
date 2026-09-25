@@ -8,18 +8,19 @@ private:
     int* user_answers;
     int correct_count;
 
+    void init(int count);
+
 public:
     MathTest(int count);
     MathTest(int count, int min, int max);
     MathTest(int count, int min, int max, char operation);
-    ~MathTest();
+    ~MathTest() noexcept;
 
-    int getCount() const;
-    int getCorrectCount() const;
+    int getCount() const noexcept;
+    int getCorrectCount() const noexcept;
     int getUserAnswer(int index) const;
     const Task& getTask(int index) const;
 
-    // НОВОЕ:
     void run();
     void show_statistics() const;
     bool checkAnswer(int index, int userAnswer);
