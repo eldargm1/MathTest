@@ -1,2 +1,3 @@
-struct Task;
-class MathTest;
+#pragma once
+#include "Task.h"
+#include "MathTest.h"
