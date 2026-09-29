@@ -25,32 +25,25 @@ MathTest::MathTest(int count, int min, int max, char operation) {
     }
 }
 
-MathTest::~MathTest() noexcept {
-    delete[] tasks;
-    delete[] user_answers;
-}
-
 void MathTest::init(int count) {
     if (count <= 0) {
         throw std::invalid_argument("Count must be > 0");
     }
     this->count = count;
-    this->correct_count = 0;
-    this->tasks = new Task[count];
-    this->user_answers = new int[count];
-    for (int i = 0; i < count; ++i) {
-        user_answers[i] = 0;
-    }
+    this->correctCount = 0;
+    this->tasks.resize(count);
+    this->userAnswers.assign(count, 0);
+    this->answered.assign(count, false);
 }
 
 int MathTest::getCount() const noexcept { return count; }
-int MathTest::getCorrectCount() const noexcept { return correct_count; }
+int MathTest::getCorrectCount() const noexcept { return correctCount; }
 
 int MathTest::getUserAnswer(int index) const {
     if (index < 0 || index >= count) {
         throw std::out_of_range("Index out of range");
     }
-    return user_answers[index];
+    return userAnswers[index];
 }
 
 const Task& MathTest::getTask(int index) const {
@@ -65,20 +58,27 @@ bool MathTest::checkAnswer(int index, int userAnswer) {
         throw std::out_of_range("Index out of range");
     }
 
-    bool wasCorrect = (user_answers[index] == tasks[index].answer);
-    if (wasCorrect) {
-        correct_count--;
+    if (answered[index] && userAnswers[index] == tasks[index].answer) {
+        correctCount--;
     }
 
-    user_answers[index] = userAnswer;
+    userAnswers[index] = userAnswer;
+    answered[index] = true;
+
     bool isCorrect = (userAnswer == tasks[index].answer);
     if (isCorrect) {
-        correct_count++;
+        correctCount++;
     }
     return isCorrect;
 }
 
 void MathTest::run() {
+    correctCount = 0;
+    for (int i = 0; i < count; ++i) {
+        userAnswers[i] = 0;
+        answered[i] = false;
+    }
+
     std::cout << "\n=== Test started ===\n";
     std::cout << "You will be asked " << count << " questions.\n\n";
 
@@ -99,10 +99,10 @@ void MathTest::run() {
     }
 
     std::cout << "\n=== Test finished ===\n";
-    show_statistics();
+    showStatistics();
 }
 
-void MathTest::show_statistics() const {
+void MathTest::showStatistics() const {
     std::cout << "\n|          No |";
     for (int i = 1; i <= count; ++i) {
         std::cout << " " << std::setw(8) << i << " |";
@@ -130,16 +130,22 @@ void MathTest::show_statistics() const {
 
     std::cout << "| Your Answer |";
     for (int i = 0; i < count; ++i) {
-        std::cout << " " << std::setw(8) << user_answers[i] << " |";
+        if (answered[i]) {
+            std::cout << " " << std::setw(8) << userAnswers[i] << " |";
+        }
+        else {
+            std::cout << " " << std::setw(8) << "-" << " |";
+        }
     }
     std::cout << "\n";
 
     std::cout << "|      Result |";
     for (int i = 0; i < count; ++i) {
-        char mark = (user_answers[i] == tasks[i].answer) ? '+' : '-';
+        bool correct = answered[i] && userAnswers[i] == tasks[i].answer;
+        char mark = correct ? '+' : '-';
         std::cout << " " << std::setw(8) << mark << " |";
     }
     std::cout << "\n\n";
 
-    std::cout << "Total Result: " << correct_count << " / " << count << "\n";
+    std::cout << "Total Result: " << correctCount << " / " << count << "\n";
 }

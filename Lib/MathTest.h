@@ -1,12 +1,14 @@
 #pragma once
 #include "Task.h"
+#include <vector>
 
 class MathTest {
 private:
-    Task* tasks;
-    int count;
-    int* user_answers;
-    int correct_count;
+    std::vector<Task> tasks;
+    std::vector<int> userAnswers;
+    std::vector<bool> answered;
+    int count = 0;
+    int correctCount = 0;
 
     void init(int count);
 
@@ -14,7 +16,6 @@ public:
     MathTest(int count);
     MathTest(int count, int min, int max);
     MathTest(int count, int min, int max, char operation);
-    ~MathTest() noexcept;
 
     int getCount() const noexcept;
     int getCorrectCount() const noexcept;
@@ -22,6 +23,6 @@ public:
     const Task& getTask(int index) const;
 
     void run();
-    void show_statistics() const;
+    void showStatistics() const;
     bool checkAnswer(int index, int userAnswer);
 };
